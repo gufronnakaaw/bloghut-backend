@@ -6,6 +6,39 @@ generator client {
 }
 
 datasource db {
-  provider = "postgresql"
+  provider = "mysql"
   url      = env("DATABASE_URL")
+}
+
+model author {
+  id          Int     @id @default(autoincrement())
+  email       String  @unique @db.VarChar(255)
+  username    String  @unique @db.VarChar(255)
+  fullname    String  @db.VarChar(255)
+  password    String  @db.VarChar(255)
+  gender      gender?
+  job         String  @db.VarChar(255)
+  description String  @db.Text
+  img         String  @db.VarChar(255)
+  created_at  BigInt  @db.UnsignedBigInt
+  updated_at  BigInt? @db.UnsignedBigInt
+  posts       post[]
+}
+
+model post {
+  id         Int     @id @default(autoincrement())
+  title      String  @db.VarChar(255)
+  slug       String  @db.VarChar(255)
+  img        String  @db.VarChar(255)
+  content    String  @db.Text
+  active     Boolean @default(true)
+  created_at BigInt  @db.UnsignedBigInt
+  updated_at BigInt? @db.UnsignedBigInt
+  author     author  @relation(fields: [id_author], references: [id])
+  id_author  Int
+}
+
+enum gender {
+  male
+  female
 }

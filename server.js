@@ -1,6 +1,7 @@
 import express from "express"
 import { config } from "dotenv"
 import cors from 'cors'
+import apiv1 from './routes/apiv1.js'
 
 // config 
 config()
@@ -11,21 +12,21 @@ const app = express()
 
 // middleware
 app.use(cors({
-    origin: 'http://localhost:port_client',
+    origin: 'http://localhost:3000',
+    methods: ['GET', 'POST', 'DELETE', 'PATCH']
 }))
 
-app.get('/api/v1', (req, res) => {
-    const start = Date.now()
+app.use(express.json())
 
+// endpoint
+app.get('/', (req, res) => {
     res.status(200).json({
-        took: Date.now() - start,
-        status: "OK",
-        message: 'soon',
-        data: null,
-        errors: null
+        success: true,
+        message: 'Hi!'
     })
-
 })
+
+app.use('/api/v1', apiv1)
 
 // run app
 app.listen(PORT, () => {
